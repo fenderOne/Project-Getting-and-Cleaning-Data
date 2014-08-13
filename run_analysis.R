@@ -6,11 +6,11 @@
 ###
 ### Info about the project and this script: README.md and CodeBook.md
 ###
-### To run the script: source("run_analysis.R")
+### To run the script: > source("run_analysis.R")
 ###
 ### Output: 
 ###     1. The object 'tidyDataSet' in the R global environment
-###     2. The file 'tidyDataSet.csv' on the working directory
+###     2. The file 'tidyDataSet.txt' on the working directory
 ###
 
 cat("Processing...\n")
@@ -128,9 +128,10 @@ cat("Data process completed\n")
 cat("\nThe object tidyDataSet contain the result.\n")
 cat("\nWriting the object tidyDataSet to './tidyDataSet.csv'\n")
 
-## Write the tidy dataset to a csv file on the working directory.
-resultFile <- "tidyDataSet.csv"
-write.csv(tidyDataSet, file = resultFile)
+## Write the tidy dataset to a txt file on the working directory.
+resultFile <- "tidyDataSet.txt"
+write.table(tidyDataSet, file = resultFile, row.name = FALSE)
 
 cat("\nProcess ended.\n")
 ################################## End of FIle ############################################
+
