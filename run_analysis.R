@@ -35,15 +35,10 @@ cat("Processing files...\n")
 featuresFile <- paste0(dataSetDirectory, "/features.txt")
 featuresFrame <- read.table(featuresFile, sep="", stringsAsFactors = FALSE, colClasses = c("NULL","character"))
 variablesNamesVector <- featuresFrame[[1]]
-    # An easy way to capitalize the first letter of the two words we are interested in using substitution
-    # We will use these two words for selecting the variables that includes "Mean()" or "Std()"
-    # We capitalize them because they will be easier to read and understant the vble names later.
-variablesNamesVector <- gsub("mean\\(\\)","Mean()",variablesNamesVector)
-variablesNamesVector <- gsub("std\\(\\)","Std()",variablesNamesVector)
     # Remove auxiliary objects
 rm(featuresFile,featuresFrame) 
 
-## Read the activity label from the activity_labels file.
+## Read the activity labels from the activity_labels file.
     # It skips the first column, and it reads the second column as character
 activityLabelsFile <- paste0(dataSetDirectory, "/activity_labels.txt")
 activityLabelsFrame <- read.table(activityLabelsFile, sep="", stringsAsFactors = FALSE, colClasses = c("NULL","character"))
@@ -53,23 +48,25 @@ activityLabelsVector <- gsub("_"," ",activityLabelsVector)
     # Remove auxiliary objects
 rm(activityLabelsFile,activityLabelsFrame) 
 
-## Read the test and training set data from their files, and includes the descriptive vble names
+## Reads the test and training dataset from their files, and includes the descriptive vble names
     # If we specify the type of our vbles with colClasses, the read op. is much faster
 classes <- rep("numeric",length(variablesNamesVector))
     # Read train data
 trainDataFile <- paste0(dataSetDirectory, "/train/X_train.txt")
-trainDataFrame <- read.table(trainDataFile, sep="", col.names = variablesNamesVector, colClasses= classes)
+trainDataFrame <- read.table(trainDataFile, sep="", col.names = variablesNamesVector, check.names = FALSE, colClasses= classes)
     # Read test data
 testDataFile <- paste0(dataSetDirectory, "/test/X_test.txt")
-testDataFrame <- read.table(testDataFile, sep="", col.names = variablesNamesVector, colClasses= classes)
+testDataFrame <- read.table(testDataFile, sep="", col.names = variablesNamesVector, check.names = FALSE, colClasses= classes)
     # Combine the two data frames
 dataFrame <- rbind(trainDataFrame,testDataFrame,deparse.level = 0)
-    # Extracts only the measurements on the mean and std for each measurement (only Mean() and Std())
-dataFrame <- dataFrame[,grepl('Mean\\(\\)|Std\\(\\)', variablesNamesVector)]
     # Remove auxiliary objects
-rm(trainDataFile,trainDataFrame,testDataFile,testDataFrame, classes) 
+rm(trainDataFile,trainDataFrame,testDataFile,testDataFrame, classes)
 
-## Read the activity data files.
+## Extracts only the measurements on the mean and std for each measurement (only Mean() and Std() are chosen)
+dataFrame <- dataFrame[,grepl('mean\\(\\)|std\\(\\)', variablesNamesVector)]
+
+
+## Reads the activity data files.
     # Train activity data
 activityDataTrainFile <- paste0(dataSetDirectory, "/train/y_train.txt")
 activityDataTrainFrame <- read.table(activityDataTrainFile,  colClasses= "factor")
@@ -109,12 +106,17 @@ rm(activitydataFactor,subjectdataLVector,activityLabelsVector,
    variablesNamesVector,dataSetDirectory) 
 
 ## Using reshape2
-## Create our tidy dataset with the average of each vble for each activity and each subject
+## Creates our tidy dataset with the average of each vble for each activity and each subject
 library(reshape2)
 tidyDataSet <- melt(dataFrame, id = c("activity", "subject"), na.rm = TRUE)
 tidyDataSet <- dcast(tidyDataSet, activity+subject ~ variable, mean)
-    # Cleans up the '.' from the vble names
-names(tidyDataSet) <- gsub("\\.","",names(tidyDataSet))
+    # Transforms the vble names to camel case and integrating the axis variable inside the function name.
+names(tidyDataSet) <- gsub("mean", "Mean", names(tidyDataSet))
+names(tidyDataSet) <- gsub("std","Std", names(tidyDataSet))
+names(tidyDataSet) <- gsub("\\(\\)-Y", "(Y)", names(tidyDataSet))
+names(tidyDataSet) <- gsub("\\(\\)-X", "(X)", names(tidyDataSet))
+names(tidyDataSet) <- gsub("\\(\\)-Z", "(Z)", names(tidyDataSet))
+names(tidyDataSet) <- gsub("-","",names(tidyDataSet))
 
 ### Using data.table
 ### Create our tidy dataset with the average of each vble for each activity and each subject
@@ -128,7 +130,7 @@ cat("Data process completed\n")
 cat("\nThe object tidyDataSet contain the result.\n")
 cat("\nWriting the object tidyDataSet to './tidyDataSet.csv'\n")
 
-## Write the tidy dataset to a txt file on the working directory.
+## Writes the tidy dataset to a txt file on the working directory.
 resultFile <- "tidyDataSet.txt"
 write.table(tidyDataSet, file = resultFile, row.name = FALSE)
 
