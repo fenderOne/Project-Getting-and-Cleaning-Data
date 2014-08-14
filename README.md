@@ -89,7 +89,7 @@ for this:
  9. Using the library **reshape2**, it creates a tidy dataset with the average of each variable for each activity and each subject.  
 It also transforms the variable names to **CamelCase** and integrate the axis variable inside the function name. Example for a transformed name: **tGravityAccMean(X)**  
 
- 10. Finally it write the tidy dataset to a text file called tidyDataSet.txt to the working directory.
+ 10. Finally it writes the tidy dataset to a text file called tidyDataSet.txt to the working directory.
 
 ### Citation Request
 
