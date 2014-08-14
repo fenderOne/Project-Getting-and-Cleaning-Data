@@ -59,7 +59,7 @@ After running the script you will have:
 
 For a definition of the variables involved in the result set look up the [CodeBook.md] file.  
 
-### How this script works
+### How This Script Works
 
  1. If the default directory for the dataset ("**./UCI HAR Dataset**") is not in the working directory, the script dowload the zip file from the Internet and unzip it generating the structure described before. If the zip  file is already unzipped in the working directory the script will use it.  
 
@@ -89,7 +89,7 @@ for this:
  9. Using the library **reshape2**, it creates a tidy dataset with the average of each variable for each activity and each subject.  
 It also transforms the variable names to **CamelCase** and integrate the axis variable inside the function name. Example for a transformed name: **tGravityAccMean(X)**  
 
- 10. Finaly it write the tidy dataset to a text file called tidyDataSet.txt to the working directory.
+ 10. Finally it writes the tidy dataset to a text file called tidyDataSet.txt to the working directory.
 
 ### Citation Request
 
